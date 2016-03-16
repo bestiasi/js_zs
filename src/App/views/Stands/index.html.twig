@@ -1,0 +1,61 @@
+{% extends 'layout.twig' %}
+{% block title %}Stand rezervation{% endblock %}
+
+{% block content %}
+    <p>This is the JobShop &copy; 2016 stands map. Click on the map to choose your stand.</p>
+     
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                {% include 'Stands\\map.html.twig' %}
+            </div>
+            <div class='row'>
+                <div class="col-md-6">
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <table class='table table-bordered table-hover'>
+                            <thead>
+                                <tr>
+                                    <th>Stand</th>
+                                    <th>Size</th>
+                                    <th>Is reserved</th>
+                                    <th>Company</th>
+                                </tr>
+                            </thead>
+                            {% for stand in stands %}
+                                <tr>
+                                    <td>{{ stand.name }}</td>
+                                    <td>{{ stand.size }}</td>
+                                    <td>{{ stand.isReserved ? 'YES' : 'NO' }}</td>
+                                    <td>{{ stand.user ? stand.user.name : '' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% if currentUserStand == false  %}
+                <span id="chosen_stand"></span>
+                <button class="btn btn-success" id="submit_reserve">Submit</button>
+            {% else %}
+                <h3>Your stand is: {{ currentUserStand.name }}</h3>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $('document').ready(function () {
+            clickOnStand();
+            submitReserve('{{path('stands.reserve')}}');
+            disableReservedStands(
+                    $.parseJSON('{{ reservedStands | json_encode() | raw }}'),
+                    $.parseJSON('{{ currentUserStand | json_encode() | raw }}')
+                    );
+        });
+    </script>
+{% endblock%}
