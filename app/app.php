@@ -39,7 +39,7 @@ $app->get('/secretAdminCreate',function() use ($app){
     die('aceasta pagina nu exista');
     //Ca sa poti accesa aceasta pagina trebuie sa pui secretAdminCreate in security.php in loc de /login
     
-    $user = $app['user.manager']->createUser('admin@bestis.ro', 'Qwerty123$', 'Andrei', array('ROLE_ADMIN'));
+    $user = $app['user.manager']->createUser('admin@bestis.ro', 'password', 'Andrei', array('ROLE_ADMIN'));
 
 $app['user.manager']->insert($user);
 });
